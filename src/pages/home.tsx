@@ -8,7 +8,7 @@ const Home = () => {
     <div className="home">
       <section></section>
       <h1>
-        Latest Products{" "}
+        Latest Products
         <Link to={"/search"} className="findmore">
           More
         </Link>
