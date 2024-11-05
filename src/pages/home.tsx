@@ -14,7 +14,7 @@ const Home = () => {
         </Link>
       </h1>
       <main>
-        <ProductCard productId="bfjdwf" photo="kjsdjgkld" name="MACKBOOK" price={10000} stock={10} handler={addToCarthandler} photo="https://m.media-amazon.com/images/I/71eXNIDUGjL._SX679_.jpg"/>
+        <ProductCard productId="bfjdwf" name="MACKBOOK" price={10000} stock={10} handler={addToCarthandler} photo="https://m.media-amazon.com/images/I/71eXNIDUGjL._SX679_.jpg"/>
 
       </main>
     </div>
