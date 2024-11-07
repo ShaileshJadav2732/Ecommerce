@@ -16,6 +16,7 @@
   align-items: $alignItems;
   gap: $gap;
 }
+
 @mixin grid($col: 1fr, $gap: 1rem, $row: unset) {
   display: grid;
   grid-template-columns: $col;
@@ -45,4 +46,12 @@
 
 @mixin baseShadow() {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.384);
+}
+
+@mixin btn($p: 0.5rem 1rem) {
+  padding: $p;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  @include baseShadow;
 }
