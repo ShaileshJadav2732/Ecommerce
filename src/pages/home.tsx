@@ -2,8 +2,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "../components/product-card";
 
 const Home = () => {
-
-  const addToCarthandler=()=>{}
+  const addToCarthandler = () => {};
   return (
     <div className="home">
       <section></section>
@@ -14,8 +13,14 @@ const Home = () => {
         </Link>
       </h1>
       <main>
-        <ProductCard productId="bfjdwf" name="MACKBOOK" price={10000} stock={10} handler={addToCarthandler} photo="https://m.media-amazon.com/images/I/71eXNIDUGjL._SX679_.jpg"/>
-
+        <ProductCard
+          productId="bfjdwf"
+          name="MACKBOOK"
+          price={10000}
+          stock={10}
+          handler={addToCarthandler}
+          photo="https://m.media-amazon.com/images/I/71eXNIDUGjL._SX679_.jpg"
+        />
       </main>
     </div>
   );
