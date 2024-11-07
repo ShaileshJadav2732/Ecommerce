@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { IoHome } from "react-icons/io5";
 import {
   FaShoppingCart,
   FaSearch,
@@ -20,7 +21,7 @@ const logoutHandler =()=>{
   return (
     <nav className="header">
       <Link to={"/"} onClick={() => setIsOpen(false)}>
-        Home
+       <IoHome/>
       </Link>
       <Link to={"/cart"} onClick={() => setIsOpen(false)}>
         <FaShoppingCart />
