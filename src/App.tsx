@@ -23,7 +23,9 @@ const ProductManagement = lazy(
 const TransactionManagement = lazy(
   () => import("./pages/admin/management/transactionmanagement")
 );
-import Header from "./components/header";
+const Header=lazy(()=>import('./components/header'))
+const Orders=lazy(()=>import('./pages/orders'))
+const OrderDetails=lazy(()=>import('./pages/order-details'))
 const App = () => {
   return (
     <Router>
@@ -35,6 +37,8 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           {/* {login Routes} */}
           <Route path="/shipping" element={<Shipping />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/order-details/:id" element={<OrderDetails />} />
           {/* Not loggedIn route */}
           <Route path="/login" element={<Login />} />
           

@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  color: $color3; // Using a predefined color variable from app.scss
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color: $color2; // Using a predefined color variable from app.scss
+}
+
+.strong {
+  font-weight: bold;
+}
