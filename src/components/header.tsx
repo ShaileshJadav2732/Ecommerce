@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoHome } from "react-icons/io5";
 import {
   FaShoppingCart,
@@ -8,10 +8,12 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { useState } from "react";
-const user = { _id: "h", role: "admin" };
+const user = { _id: "", role: "" };
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+
 
 const logoutHandler =()=>{
       setIsOpen(false);
@@ -53,7 +55,7 @@ const logoutHandler =()=>{
           </dialog>
         </>
       ) : (
-        <button>
+        <button onClick={() => navigate("/login")}>
           <FaSignInAlt />
         </button>
       )}

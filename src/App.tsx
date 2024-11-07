@@ -16,6 +16,7 @@ const Stopwatch = lazy(() => import("./pages/admin/apps/stopwatch"));
 const Toss = lazy(() => import("./pages/admin/apps/toss"));
 const NewProduct = lazy(() => import("./pages/admin/management/newproduct"));
 const Shipping=lazy(()=>import('./pages/shipping'));
+const Login=lazy(()=>import('./pages/login'))
 const ProductManagement = lazy(
   () => import("./pages/admin/management/productmanagement")
 );
@@ -33,11 +34,14 @@ const App = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
           {/* {login Routes} */}
-          <Route path="/shipping" element={<Shipping/>} />
+          <Route path="/shipping" element={<Shipping />} />
+          {/* Not loggedIn route */}
+          <Route path="/login" element={<Login />} />
+          
           {/* Admin Routes */}
           <Route
-          // element={
-          //   <ProtectedRoute
+            // element={
+            //   <ProtectedRoute
           //     isAuthenticated={true}
           //     adminRoute={true}
           //     isAdmin={true}
