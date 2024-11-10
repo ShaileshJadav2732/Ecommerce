@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from "express";
 export interface newUserRequestBody {
   name: string;
   email: string;
@@ -6,4 +7,10 @@ export interface newUserRequestBody {
   photo: string;
   gender:string;
 
-}
+} 
+
+export type ControllerType =  (
+  req: Request<{}, {}, newUserRequestBody>,
+    res: Response,
+  next: NextFunction
+) => Promise<void | Response<any, Record<string, any>>>;
