@@ -1,8 +1,8 @@
 import express from "express";
-import { connectDB } from "./utils/features.js";
-import userRouter from "./routes/user.js";
 import { errorMiddleware } from "./middlewares/error.js";
-
+import productRoute from "./routes/products.js";
+import userRoute from "./routes/user.js";
+import { connectDB } from "./utils/features.js";
 
  const app = express();
 
@@ -13,7 +13,10 @@ app.get("/", (req, res) => {
   res.send("api working");
 });
 
-app.use("/api/v1/user", userRouter);
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/product",productRoute)
+
+app.use("/uploads",express.static("uploads"));
 
 app.use(errorMiddleware);
 
