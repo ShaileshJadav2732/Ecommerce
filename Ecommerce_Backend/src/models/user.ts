@@ -53,7 +53,8 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.virtual("age").get(function () {  // virtual field to calculate age of user
+userSchema.virtual("age").get(function () {
+  // virtual field to calculate age of user
   const today = new Date();
   const dob = this.dob;
   let age = today.getFullYear() - dob.getFullYear();
