@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 import validator from "validator";
 
-interface IUser extends Document{
-   _id:string;
-   name:string;
-   photo:string;
-   dob:Date;
-   gender:"male"|"female";
-   email:string;
-   createdAt:Date;
-   updatedAt:Date; 
-   age:number;
-     
+interface IUser extends Document {
+  _id: string;
+  name: string;
+  photo: string;
+  dob: Date;
+  gender: "male" | "female";
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+  age: number;
+  role: "admin" | "user";
 }
 
 const userSchema = new mongoose.Schema(
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       required: [true, "Date of birth is required"],
     },
-   
+
     photo: {
       type: String,
       required: [true, "Photo is required"],
@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["male", "female"],
       required: [true, "Gender is required"],
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
   },
   { timestamps: true }

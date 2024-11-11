@@ -1,6 +1,6 @@
 import express from "express";
 import { newUser,getAllUsers,getUser,deleteUser} from "../controllers/user.js";
-
+import { adminOnly } from "../middlewares/auth.js";
 
 const app = express.Router();
 
@@ -8,11 +8,11 @@ const app = express.Router();
 app.post("/new",newUser);
 
 //api/v1/user/all
-app.get("/all",getAllUsers);
+app.get("/all",adminOnly,getAllUsers);
 
 //api/v1/user/:id
 
-app.route("/:id").get(getUser).delete(deleteUser);
+app.route("/:id").get(adminOnly,getUser).delete(adminOnly,deleteUser);
 // app.get("/:id",getUser);
 // app.delete("/:id",deleteUser)
 
