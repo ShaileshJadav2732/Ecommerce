@@ -4,6 +4,7 @@ import Product from "../models/products.js";
 import { NewProductRequestBody } from "../types/types.js";
 import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
+import { promises as fsPromises } from "fs";
 
 export const newProduct = TryCatch(
   async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
@@ -60,20 +61,18 @@ export const getAllCategories = TryCatch(
   }
 );
 
-export const getAdminProducts = TryCatch(
-  async (req: Request<{}, {}, NewProductRequestBody>, res, next) => {
-    const products = await Product.find({});
+export const getAdminProducts = TryCatch(async (req, res, next) => {
+  const products = await Product.find({});
 
-    return res.status(200).json({
-      success: true,
-      products,
-    });
-  }
-);
+  return res.status(200).json({
+    success: true,
+    products,
+  });
+});
 
 export const getSingleProduct = TryCatch(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
- if (!product) return next(new ErrorHandler("Product Not Found", 404));
+  if (!product) return next(new ErrorHandler("Product Not Found", 404));
   return res.status(200).json({
     success: true,
     product,
@@ -81,25 +80,27 @@ export const getSingleProduct = TryCatch(async (req, res, next) => {
 });
 
 export const updateProduct = TryCatch(async (req, res, next) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { name, price, stock, category } = req.body;
   const photo = req.file;
   const product = await Product.findById(id);
   if (!product) return next(new ErrorHandler("Product Not Found", 404));
 
   if (photo) {
-    // photo delete in upload folder
-    rm(product.photo, () => {
-      console.log(" Old Photo Deleted");
-    });
-
-    product.photo = photo.path; // delete old photo and give old path to new photo
+    try {
+      await fsPromises.unlink(product.photo);
+      console.log("Old Photo Deleted");
+      product.photo = photo.path;
+    } catch (error) {
+      console.error("Error deleting old photo:", error);
+      return next(new ErrorHandler("Error updating product photo", 500));
+    }
   }
 
   if (name) product.name = name;
   if (price) product.price = price;
   if (stock) product.stock = stock;
-  if (category) product.category = category;
+  if (category) product.category = category.toLowerCase();
 
   await product.save();
 
@@ -109,20 +110,17 @@ export const updateProduct = TryCatch(async (req, res, next) => {
   });
 });
 
-
-
 export const deleteProduct = TryCatch(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
- if (!product) return next(new ErrorHandler("Product Not Found", 404));
+  if (!product) return next(new ErrorHandler("Product Not Found", 404));
 
- rm(product.photo, () => {
-   console.log(" Product Photo Deleted");
- });
+  rm(product.photo, () => {
+    console.log(" Product Photo Deleted");
+  });
 
-
- await product.deleteOne();
+  await product.deleteOne();
   return res.status(200).json({
     success: true,
-    message:"Product Deleted Successfully",
+    message: "Product Deleted Successfully",
   });
 });

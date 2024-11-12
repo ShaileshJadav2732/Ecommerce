@@ -14,8 +14,11 @@ import { singleUpload } from "../middlewares/multer.js";
 
 const app = express.Router();
 
+
+
+
 // to create new products -/api/v1/product/new
-app.post("/new", adminOnly, singleUpload, newProduct);
+app.post("/new",singleUpload, newProduct);
 // to get last 10 products -/api/v1/product/latest
 app.get("/latest", getLatestProduct);
 // to get all unique categories -/api/v1/product/categories
@@ -23,10 +26,9 @@ app.get("/categories", getAllCategories);
 //to get all products /api/v1/product/admin-products
 app.get("/admin-products", getAdminProducts);
 
-app
-  .route("/:id")
+app.route("/:id")
   .get(getSingleProduct)
-  .put(updateProduct)
+  .put(singleUpload, updateProduct)
   .delete(deleteProduct);
 
 export default app;
