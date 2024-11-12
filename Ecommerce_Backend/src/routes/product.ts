@@ -8,7 +8,7 @@ import {
   updateProduct,
   deleteProduct,
   getAllProducts
-} from "../controllers/products.js";
+} from "../controllers/product.js";
 import { adminOnly } from "../middlewares/auth.js";
 import { singleUpload } from "../middlewares/multer.js";
 import NodeCache from "node-cache";

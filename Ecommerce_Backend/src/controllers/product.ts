@@ -9,10 +9,8 @@ import {
 import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
 import { promises as fsPromises } from "fs";
-import { myCache } from "../routes/products.js";
+import { myCache } from "../routes/product.js";
 import { invalidateCache } from "../utils/features.js";
-
-
 
 // Controller to get the latest products
 export const getLatestProduct = TryCatch(
@@ -118,7 +116,7 @@ export const newProduct = TryCatch(
     });
   }
 );
-  
+
 // Controller to update a product by ID
 export const updateProduct = TryCatch(async (req, res, next) => {
   const { id } = req.params; // Get product ID from request parameters
