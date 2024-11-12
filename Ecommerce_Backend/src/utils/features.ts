@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { myCache } from "../routes/product.js";
 import { invalidateCacheType } from "../types/types.js";
-import Product from "../models/products.js";
-export const connectDB = (uri:string) => {
+import Product from "../models/product.js";
+export const connectDB = (uri: string) => {
   try {
     mongoose
       .connect(uri, {

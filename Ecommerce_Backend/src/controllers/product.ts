@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { TryCatch } from "../middlewares/error.js";
-import Product from "../models/products.js";
+import Product from "../models/product.js";
 import {
   BaseQuery,
   NewProductRequestBody,
