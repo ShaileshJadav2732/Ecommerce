@@ -13,7 +13,6 @@ export interface NewProductRequestBody {
   category: string;
   price: number;
   stock: number;
- 
 }
 
 export type ControllerType = (
@@ -21,3 +20,29 @@ export type ControllerType = (
   res: Response,
   next: NextFunction
 ) => Promise<void | Response<any, Record<string, any>>>;
+
+export type searchRequestQuery = {
+  search?: string;
+  category?: string;
+  sort?: string;
+  price?: string;
+  page?: string;
+};
+
+export interface BaseQuery {
+  name?: {
+    $regex: string;
+    $options: string;
+  };
+  price?: {
+    $lte: number;
+  };
+  category?: string;
+}
+
+export type invalidateCacheType = {
+product?:boolean;
+order?:boolean;
+admin?:boolean;
+};
+

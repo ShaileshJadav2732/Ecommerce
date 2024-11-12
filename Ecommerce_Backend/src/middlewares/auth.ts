@@ -12,7 +12,7 @@ export const adminOnly = TryCatch(async (req, res, next) => {
 
   // Correcting the error message for non-admin users
   if (user.role !== "admin") {
-    return next(new ErrorHandler("You do not have admin access to this route", 403));
+    return next(new ErrorHandler("Only Admin can access this route", 403));
   }
 
   next();
