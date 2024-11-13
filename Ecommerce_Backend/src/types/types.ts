@@ -28,7 +28,7 @@ export type searchRequestQuery = {
   price?: string;
   page?: string;
 };
-
+  
 export interface BaseQuery {
   name?: {
     $regex: string;
@@ -41,8 +41,35 @@ export interface BaseQuery {
 }
 
 export type invalidateCacheType = {
-product?:boolean;
-order?:boolean;
-admin?:boolean;
+  product?: boolean;
+  order?: boolean;
+  admin?: boolean;
 };
 
+export type orderItem = {
+  name: string;
+  price: number;
+  quantity: number;
+  photo: string;
+  productId: string;
+};
+
+export type ShippingInfo = {
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pinCode: number;
+};
+
+export interface NewOrderRequestBody {
+  shippingInfo:ShippingInfo;
+  user: string;
+  orderItems: orderItem[];
+  subTotal: number;
+  tax: number;
+  shippingCharges: number;
+  discount: number;
+  total: number;
+  status: string; 
+}

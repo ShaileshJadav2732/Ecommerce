@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import { myCache } from "../routes/product.js";
-import { invalidateCacheType } from "../types/types.js";
+import { invalidateCacheType, orderItem } from "../types/types.js";
 import Product from "../models/product.js";
+import ErrorHandler from "./utility-class.js";
 export const connectDB = (uri: string) => {
   try {
     mongoose
@@ -33,3 +34,15 @@ export const invalidateCache = async ({
   if (admin) {
   }
 };
+
+export const ReduceStock = async (orderItems: orderItem[]) => {
+  orderItems.forEach(async (item) => {
+    const product = await Product.findById(item.productId);
+    if (!product) throw new ErrorHandler("Product not found", 404);
+    if (product) {
+      product.stock -= item.quantity;
+      await product.save();
+    }   
+  });
+};
+ 
