@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+import Product from "../models/product.js";
 import { myCache } from "../routes/product.js";
 import { invalidateCacheType, orderItem } from "../types/types.js";
-import Product from "../models/product.js";
 import ErrorHandler from "./utility-class.js";
 export const connectDB = (uri: string) => {
   try {
@@ -22,14 +22,31 @@ export const invalidateCache = async ({
   admin,
   order,
   product,
+  userId,
+  orderId,
+  productId,
 }: invalidateCacheType) => {
   if (product) {
-    const productKeys: string[] = ["latest - products", "categories"];
-    const products = await Product.find({}).select("_id");
-    products.forEach((element) => productKeys.push(`product-${element._id}`));
+    const productKeys: string[] = [
+      "latest-products",
+      "categories",
+      "all-products",
+      `product-${productId}`,
+    ];
+    if (typeof productId === "string") productKeys.push(`product-${productId}`);
+
+    if (typeof productId === "object")
+      productId.forEach((i) => productKeys.push(`product-${i}`));
+
     myCache.del(productKeys);
   }
   if (order) {
+    const orderKeys: string[] = [
+      "all-orders",
+      `my-orders-${userId}`,
+      `order-${orderId}`,
+    ];
+    myCache.del(orderKeys);
   }
   if (admin) {
   }
@@ -42,7 +59,6 @@ export const ReduceStock = async (orderItems: orderItem[]) => {
     if (product) {
       product.stock -= item.quantity;
       await product.save();
-    }   
+    }
   });
 };
- 

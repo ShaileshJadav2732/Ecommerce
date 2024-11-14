@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ControllerType } from "../types/types.js";
 import ErrorHandler from "../utils/utility-class.js";
+
 export const errorMiddleware = (
   err: ErrorHandler,
   req: Request,
@@ -9,6 +10,8 @@ export const errorMiddleware = (
 ) => {
   err.message ||= "Internal Server Error";
   err.statusCode ||= 500;
+ if (err.name==="CastError")  err.message="Invalid Id";
+
   res.status(err.statusCode).json({
     success: true,
     message: err.message,
