@@ -24,37 +24,37 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
 
     const thisMonthProductPromise = await Product.find({
       createdAt: {
-        $get: thisMonth.start,
+        $gte: thisMonth.start,
         $lte: thisMonth.end,
       },
     });
     const lastMonthProductPromise = await Product.find({
       createdAt: {
-        $get: lastMonth.start,
+        $gte: lastMonth.start,
         $lte: lastMonth.end,
       },
     });
     const thisMonthUserPromise = await User.find({
       createdAt: {
-        $get: thisMonth.start,
+        $gte: thisMonth.start,
         $lte: thisMonth.end,
       },
     });
     const lastMonthUserPromise = await User.find({
       createdAt: {
-        $get: lastMonth.start,
+        $gte: lastMonth.start,
         $lte: lastMonth.end,
       },
     });
     const thisMonthOrderPromise = await Order.find({
       createdAt: {
-        $get: thisMonth.start,
+        $gte: thisMonth.start,
         $lte: thisMonth.end,
       },
     });
     const lastMonthOrderPromise = await Order.find({
       createdAt: {
-        $get: lastMonth.start,
+        $gte: lastMonth.start,
         $lte: lastMonth.end,
       },
     });
@@ -94,10 +94,10 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
     };
   }
 
-  //   return res.send(200).json({
-  //    success:true,
-  //    stats
-  //   })
+    return res.send(200).json({
+     success:true,
+     stats
+    })
 });
 
 export const getBarCharts = TryCatch(async (req, res, next) => {});
