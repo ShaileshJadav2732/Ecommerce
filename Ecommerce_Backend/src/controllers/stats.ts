@@ -3,6 +3,7 @@ import { TryCatch } from "../middlewares/error.js";
 import Product from "../models/product.js";
 import User from "../models/user.js";
 import Order from "./../models/order.js";
+import { calculatePercentage } from "../utils/features.js";
 
 export const getDashboardStats = TryCatch(async (req, res, next) => {
   let stats = {};
@@ -73,6 +74,24 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       lastMonthProductPromise,
       lastMonthUserPromise,
     ]);
+    const userChangePercent = calculatePercentage(
+      thisMonthUser.length,
+      lastMonthUser.length
+    );
+    const productChangePercent = calculatePercentage(
+      thisMonthUser.length,
+      lastMonthUser.length
+    );
+    const orderChangePercent = calculatePercentage(
+      thisMonthUser.length,
+      lastMonthUser.length
+    );
+
+    stats = {
+      productChangePercent,
+      userChangePercent,
+      orderChangePercent,
+    };
   }
 
   //   return res.send(200).json({

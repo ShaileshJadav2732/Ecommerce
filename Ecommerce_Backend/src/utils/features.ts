@@ -58,7 +58,14 @@ export const ReduceStock = async (orderItems: orderItem[]) => {
     if (!product) throw new ErrorHandler("Product not found", 404);
     if (product) {
       product.stock -= item.quantity;
-      await product.save();
+      await product.save(); 
     }
   });
 };
+
+export const calculatePercentage=(thisMonth:number,lastMonth:number)=>{
+
+  if(lastMonth===0) return thisMonth*100;
+  const percent=((thisMonth-lastMonth)/lastMonth)*100;
+  return percent.toFixed(0);
+}
