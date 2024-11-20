@@ -68,6 +68,9 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
         $lte: today,
       },
     });
+    const latestTransactionPromise = Order.find({})
+      .select(["orderItems", "discount", "total", "status"])
+      .limit(4);
 
     const [
       thisMonthOrder,
@@ -80,6 +83,9 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       usersCount,
       allOrders,
       lastSixMonthOrders,
+      categories,
+      femaleUsersCount,
+      latestTransaction,
     ] = await Promise.all([
       thisMonthOrderPromise,
       thisMonthProductPromise,
@@ -91,6 +97,9 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       User.countDocuments(),
       Order.find({}).select("total"),
       lastSixMonthOrdersPromise,
+      Product.distinct("category"),
+      User.countDocuments({ gender: "female" }),
+      latestTransactionPromise,
     ]);
 
     const thisMonthRevenue = thisMonthOrder.reduce(
@@ -135,20 +144,52 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
       }
     });
 
+    const categortCountPromise = categories.map((category) =>
+      Product.countDocuments({ category })
+    );
+
+    const categoriesCount = await Promise.all(categortCountPromise);
+
+    const categoryCount: Record<string, number>[] = [];
+
+    categories.forEach((category, i) => {
+      categoryCount.push({
+        [category]: Math.round((categoriesCount[i] / productCount) * 100),
+      });
+    });
+
+    const userRatio = {
+      male: usersCount - femaleUsersCount,
+      female: femaleUsersCount,
+    };
+
+    const modifiedLatestTransaction = latestTransaction.map((i) => ({
+      _id: i._id,
+      discount: i.discount,
+      amount: i.total,
+      quantity: i.orderItems.length,
+      status: i.status,
+    }));
     stats = {
+      categories,
+      categoriesCount,
       changePercent,
       count,
       chart: {
         order: orderMonthCounts,
         revenue: orderMonthRevenue,
       },
+      userRatio,
+      latestTransaction:modifiedLatestTransaction
     };
   }
 
+  myCache.set("admin-stats",JSON.stringify(stats));
   return res.status(200).json({
     success: true,
     stats: stats,
   });
+
 });
 
 export const getBarCharts = TryCatch(async (req, res, next) => {});
