@@ -65,7 +65,7 @@ export const ReduceStock = async (orderItems: orderItem[]) => {
 
 export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
   if (lastMonth === 0) return 100;
-  const percent = ((thisMonth - lastMonth) / lastMonth) * 100;
+  const percent = ((thisMonth) / lastMonth) * 100;
   return percent.toFixed(0);
 };
 
@@ -92,3 +92,26 @@ export const getInventories = async ({
 
   return categoryCount;
 };
+
+interface MyDocument extends Document {
+  createdAt: Date;
+}
+type FuncProps={
+length:number;
+today:Date; 
+docArr:any;
+}
+export const getChartData = ({ length, today, docArr }: FuncProps) => {
+  const data: number[] = new Array(length).fill(0);
+
+  docArr.forEach((i:any) => {
+    const creationDate = i.createdAt;
+    const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+
+    if (monthDiff < length) {
+      data[length - monthDiff - 1] += 1;
+    }
+  });
+
+  return data;
+}; 

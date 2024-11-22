@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
     },
-  
+
     photo: {
       type: String,
       required: [true, "Photo is required"],
@@ -24,13 +24,11 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      trim:true
+      trim: true,
     },
   },
   { timestamps: true }
 );
-
-
 
 const Product = mongoose.model("Product", productSchema);
 
