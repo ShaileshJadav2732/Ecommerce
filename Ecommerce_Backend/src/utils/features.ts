@@ -18,7 +18,7 @@ export const connectDB = (uri: string) => {
   }
 };
 
-export const invalidateCache = async ({
+export const invalidateCache =({
   admin,
   order,
   product,
@@ -49,6 +49,13 @@ export const invalidateCache = async ({
     myCache.del(orderKeys);
   }
   if (admin) {
+
+    myCache.del([
+      "admin-stats",
+      "admin-pie-charts",
+      "admin-bar-charts",
+      "admin-line-charts",
+    ]);
   }
 };
 
@@ -65,7 +72,7 @@ export const ReduceStock = async (orderItems: orderItem[]) => {
 
 export const calculatePercentage = (thisMonth: number, lastMonth: number) => {
   if (lastMonth === 0) return 100;
-  const percent = ((thisMonth) / lastMonth) * 100;
+  const percent = (thisMonth / lastMonth) * 100;
   return percent.toFixed(0);
 };
 
@@ -95,23 +102,36 @@ export const getInventories = async ({
 
 interface MyDocument extends Document {
   createdAt: Date;
+  discount?: number;
+  total?: number;
 }
-type FuncProps={
-length:number;
-today:Date; 
-docArr:any;
-}
-export const getChartData = ({ length, today, docArr }: FuncProps) => {
+type FuncProps = {
+  length: number;
+  docArr: MyDocument[];
+  today: Date;
+  property?: "discount" | "total";
+};
+
+export const getChartData = ({
+  length,
+  docArr,
+  today,
+  property,
+}: FuncProps) => {
   const data: number[] = new Array(length).fill(0);
 
-  docArr.forEach((i:any) => {
+  docArr.forEach((i) => {
     const creationDate = i.createdAt;
     const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
 
     if (monthDiff < length) {
-      data[length - monthDiff - 1] += 1;
+      if (property) {
+        data[length - monthDiff - 1] += i[property]!;
+      } else {
+        data[length - monthDiff - 1] += 1;
+      }
     }
   });
 
   return data;
-}; 
+};

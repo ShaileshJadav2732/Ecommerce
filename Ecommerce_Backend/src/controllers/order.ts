@@ -36,7 +36,7 @@ export const newOrder = TryCatch(
     )
       return next(new ErrorHandler("All fields are required", 400));
 
-    const order=await Order.create({
+    const order = await Order.create({
       shippingInfo,
       orderItems,
       subTotal,
@@ -55,7 +55,6 @@ export const newOrder = TryCatch(
       userId: user,
       productId: order.orderItems.map((i) => String(i.productId)),
     });
-
 
     return res.status(201).json({
       success: true,
