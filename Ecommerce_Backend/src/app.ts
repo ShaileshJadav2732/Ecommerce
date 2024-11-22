@@ -1,5 +1,7 @@
 import express from "express";
 import { errorMiddleware } from "./middlewares/error.js";
+import Stripe from 'stripe';
+
 import productRoute from "./routes/product.js";
 import userRoute from "./routes/user.js";
 import { connectDB } from "./utils/features.js";
@@ -17,7 +19,9 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 const uri= process.env.MONGO_URI || "";
+const stripeKey= process.env.STRIPE_KEY || "";
 connectDB(uri);
+export const stripe = new Stripe(stripeKey);
 
 app.get("/", (req, res) => {
   res.send("api working");
