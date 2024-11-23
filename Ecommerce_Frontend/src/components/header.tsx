@@ -1,18 +1,17 @@
-import { Link, useNavigate } from "react-router-dom";
-import { IoHome } from "react-icons/io5";
-import {
-  FaShoppingCart,
-  FaSearch,
-  FaSignInAlt,
-  FaUser,
-  FaSignOutAlt,
-} from "react-icons/fa";
 import { useState } from "react";
-const user = { _id: "gh", role: "admin" };
+import {
+  FaSearch,
+  FaShoppingCart,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaUser,
+} from "react-icons/fa";
+import { IoHome } from "react-icons/io5";
+import { Link } from "react-router-dom";
+const user = { _id: "", role: "user" };
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const navigate = useNavigate();
 
 
 const logoutHandler =()=>{
@@ -23,7 +22,7 @@ const logoutHandler =()=>{
   return (
     <nav className="header">
       <Link to={"/"} onClick={() => setIsOpen(false)}>
-       <IoHome/>
+        <IoHome />
       </Link>
       <Link to={"/cart"} onClick={() => setIsOpen(false)}>
         <FaShoppingCart />
@@ -55,9 +54,9 @@ const logoutHandler =()=>{
           </dialog>
         </>
       ) : (
-        <button onClick={() => navigate("/login")}>
+        <Link to="/login">
           <FaSignInAlt />
-        </button>
+        </Link>
       )}
     </nav>
   );

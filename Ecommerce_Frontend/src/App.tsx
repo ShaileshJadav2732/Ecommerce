@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { Toaster } from "react-hot-toast";
 import Loader from "./components/loader";
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -26,6 +27,8 @@ const TransactionManagement = lazy(
 const Header=lazy(()=>import('./components/header'))
 const Orders=lazy(()=>import('./pages/orders'))
 const OrderDetails=lazy(()=>import('./pages/order-details'))
+
+
 const App = () => {
   return (
     <Router>
@@ -78,6 +81,7 @@ const App = () => {
           ;
         </Routes>
       </Suspense>
+      <Toaster position="bottom-center"/>
     </Router>
   );
 };
