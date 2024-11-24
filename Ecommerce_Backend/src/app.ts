@@ -10,6 +10,7 @@ import {config} from "dotenv";
 import morgan from "morgan";
 import paymentRoute from "./routes/payment.js"
 import statsRoute from "./routes/stats.js"
+import cors from  "cors";
 config({
   path: "./.env",
 })
@@ -18,6 +19,8 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors());
+
 const uri= process.env.MONGO_URI || "";
 const stripeKey= process.env.STRIPE_KEY || "";
 connectDB(uri);
