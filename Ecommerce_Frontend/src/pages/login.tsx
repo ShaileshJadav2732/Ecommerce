@@ -22,7 +22,7 @@ const Login = () => {
         name: user.displayName !,
         email: user.email!,
         photo: user.photoURL !,
-        gender,
+        gender:gender!,
         role: "user",
         dob: date!,
         _id: user.uid!,
@@ -36,6 +36,7 @@ const Login = () => {
         const message =
           (error.data as MessageResponse).message ;
         toast.error(message);
+        console.log(message)
       } else {
         toast.error("Unexpected error");
       }

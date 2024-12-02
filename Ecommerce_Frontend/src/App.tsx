@@ -1,7 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import Loader from "./components/loader";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+// import { User } from "firebase/auth";
+import { getUser } from "./redux/api/userApi";
+// import ProtectedRoute from "./components/admin/protected-route";
+import { useDispatch, useSelector } from "react-redux";
+import { userExist, userNotExist } from "./redux/reducer/userReducer";
+import { UserReducerInitialState } from "./types/reducer-types";
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
 const Cart = lazy(() => import("./pages/cart"));
@@ -16,26 +24,46 @@ const Coupon = lazy(() => import("./pages/admin/apps/coupon"));
 const Stopwatch = lazy(() => import("./pages/admin/apps/stopwatch"));
 const Toss = lazy(() => import("./pages/admin/apps/toss"));
 const NewProduct = lazy(() => import("./pages/admin/management/newproduct"));
-const Shipping=lazy(()=>import('./pages/shipping'));
-const Login=lazy(()=>import('./pages/login'))
+const Shipping = lazy(() => import("./pages/shipping"));
+const Login = lazy(() => import("./pages/login"));
 const ProductManagement = lazy(
   () => import("./pages/admin/management/productmanagement")
 );
 const TransactionManagement = lazy(
   () => import("./pages/admin/management/transactionmanagement")
 );
-const Header=lazy(()=>import('./components/header'))
-const Orders=lazy(()=>import('./pages/orders'))
-const OrderDetails=lazy(()=>import('./pages/order-details'))
-
+const Header = lazy(() => import("./components/header"));
+const Orders = lazy(() => import("./pages/orders"));
+const OrderDetails = lazy(() => import("./pages/order-details"));
 
 const App = () => {
-  return (
+  const { user, loading } = useSelector(
+    (state: { user: UserReducerInitialState }) => state.user
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
+      try {
+        if (user) {
+          const data = await getUser(user.uid);
+          console.log(data.message);
+          dispatch(userExist(data.user));
+        } else {
+          dispatch(userNotExist());
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        dispatch(userNotExist());
+      }
+    });
+  }, []);
+
+ return (
     <Router>
-      <Header />
       <Suspense fallback={<Loader />}>
+        <Header user={user} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home/>}/>
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
           {/* {login Routes} */}
@@ -44,16 +72,10 @@ const App = () => {
           <Route path="/order-details/:id" element={<OrderDetails />} />
           {/* Not loggedIn route */}
           <Route path="/login" element={<Login />} />
-          
+
           {/* Admin Routes */}
           <Route
-            // element={
-            //   <ProtectedRoute
-          //     isAuthenticated={true}
-          //     adminRoute={true}
-          //     isAdmin={true}
-          //   />
-          // }
+            // element={<ProtectedRoute isAuthenticated={true} redirectPath="/" />}
           >
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/product" element={<Products />} />
@@ -78,10 +100,9 @@ const App = () => {
               element={<TransactionManagement />}
             />
           </Route>
-          ;
         </Routes>
       </Suspense>
-      <Toaster position="bottom-center"/>
+      <Toaster position="bottom-center" />
     </Router>
   );
 };

@@ -8,9 +8,13 @@ import {
 } from "react-icons/fa";
 import { IoHome } from "react-icons/io5";
 import { Link } from "react-router-dom";
-const user = { _id: "", role: "user" };
+import {User} from "../types/types"
 
-const Header = () => {
+ interface PropsType{ 
+  user :User |null;
+}
+
+const Header = ({user}:PropsType) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
 
