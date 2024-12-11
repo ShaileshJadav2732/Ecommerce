@@ -17,6 +17,7 @@ export const userAPI = createApi({
     }),
   }),
 });
+export const { useLoginMutation } = userAPI;
 
 export const getUser = async (id: string) => {
   try {
@@ -28,4 +29,3 @@ export const getUser = async (id: string) => {
     throw error;
   }
 };
-export const { useLoginMutation } = userAPI;

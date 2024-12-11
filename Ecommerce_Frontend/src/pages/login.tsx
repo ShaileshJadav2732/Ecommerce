@@ -32,7 +32,7 @@ const Login = () => {
         const responseData = res.data as MessageResponse; // Ensure it matches your API type
         toast.success(responseData.message);
       } else if ("error" in res) {
-        const error = res.error as FetchBaseQueryError;
+        const error = res as FetchBaseQueryError;
         const message =
           (error.data as MessageResponse).message ;
         toast.error(message);

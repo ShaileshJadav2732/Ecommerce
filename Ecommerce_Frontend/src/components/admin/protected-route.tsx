@@ -1,18 +1,26 @@
-import React, { ReactNode } from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { ReactElement } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 
-interface ProtectedRouteProps {
-   isAuthenticated: boolean; // Indicates if the user is authenticated
-    redirectPath?: string;    // Optional: Path to redirect if not authenticated
-   //  children: ReactNode;      // The component(s) to render if authenticated
+interface Props {
+  children?: ReactElement;
+  isAuthenticated: boolean;
+  adminOnly?: boolean;
+  admin?: boolean;
+  redirect?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({isAuthenticated,redirectPath,}) => {
-   return isAuthenticated ? (
-      redirectPath="/"
-   ) : (
-      <Navigate to={redirectPath || "/login"} />
-   );
+const ProtectedRoute = ({
+  isAuthenticated,
+  children,
+  adminOnly,
+  admin,
+  redirect = "/",
+}: Props) => {
+  if (!isAuthenticated) return <Navigate to={redirect} />;
+
+  if (adminOnly && !admin) return <Navigate to={redirect} />;
+
+  return children ? children : <Outlet />;
 };
 
 export default ProtectedRoute;

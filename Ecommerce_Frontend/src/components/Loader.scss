@@ -1,0 +1,37 @@
+/* FILE: Ecommerce_Frontend/src/components/Loader.scss */
+
+.home.loader {
+padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+ height: 100%;
+  width: 100%;
+
+  .loader-background {
+    width: 100%;
+   margin-bottom: 2rem;
+     height: 17rem;
+     background-image: none;
+  }
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  .loader-products {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .product-card {
+    width: 15rem;
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
