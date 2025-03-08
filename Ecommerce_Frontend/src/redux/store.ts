@@ -1,20 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { productAPI } from "./api/productApi";
 import { userAPI } from "./api/userApi";
-import {userReducer} from "./reducer/userReducer";
-
+import { userReducer } from "./reducer/userReducer";
 
 export const server = import.meta.env.VITE_SERVER;
 
 export const store = configureStore({
-  reducer: {
-    // API reducer to handle async actions
-    [userAPI.reducerPath]: userAPI.reducer,
- 
+	reducer: {
+		// API reducers to handle async actions
+		[userAPI.reducerPath]: userAPI.reducer,
+		[productAPI.reducerPath]: productAPI.reducer,
 
-    // Sync user state reducer
-    user: userReducer.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(userAPI.middleware),
+		// Sync user state reducer
+		user: userReducer.reducer,
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(userAPI.middleware, productAPI.middleware),
 });
- export type RootState = ReturnType<typeof store.getState>;
+
+export type RootState = ReturnType<typeof store.getState>;
