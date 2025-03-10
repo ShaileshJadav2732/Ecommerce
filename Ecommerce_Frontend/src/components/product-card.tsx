@@ -1,5 +1,5 @@
-import React from "react";
 import { FaPlus } from "react-icons/fa";
+import { server } from "../redux/store";
 
 type productsProps = {
 	productId: string;
@@ -9,14 +9,12 @@ type productsProps = {
 	stock: number;
 	handler: () => void;
 };
-const server = "kjsdjgkld";
 
 const ProductCard = ({
-	productId,
 	photo,
 	name,
 	price,
-	stock,
+
 	handler,
 }: productsProps) => {
 	return (

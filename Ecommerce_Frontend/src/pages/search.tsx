@@ -1,17 +1,48 @@
 import { useState } from "react";
 import ProductCard from "../components/product-card";
+import {
+	useCategoriesQuery,
+	useSearchProductsQuery,
+} from "../redux/api/productApi";
+import toast from "react-hot-toast";
+import { CustomeError } from "../types/api-types";
+import { Skeleton } from "../components/loader";
 
 const Search = () => {
+	const { data: categoriesResponse, isError, error } = useCategoriesQuery("");
+
 	const [search, setSearch] = useState("");
 	const [sort, setSort] = useState("");
 	const [category, setCategory] = useState("");
 	const [maxPrice, setMaxPrice] = useState("");
 	const [page, setPage] = useState(1);
 
+	const {
+		isLoading: productLoading,
+		data: searchedData,
+		isError: productIsError,
+		error: productError,
+	} = useSearchProductsQuery({
+		price: Number(maxPrice),
+		category,
+		search,
+		sort,
+		page,
+	});
+	console.log(searchedData);
 	const addToCarthandler = () => {};
 
 	const isPrevPage = true;
 	const isNextPage = true;
+
+	if (isError) {
+		const err = error as CustomeError;
+		toast.error(err.data.message);
+	}
+	if (productIsError) {
+		const err = productError as CustomeError;
+		toast.error(err.data.message);
+	}
 
 	return (
 		<div className="product-search-page">
@@ -30,7 +61,7 @@ const Search = () => {
 					<input
 						type="range"
 						min="100"
-						max="100000"
+						max="1000000"
 						value={maxPrice}
 						onChange={(e) => setMaxPrice(e.target.value)}
 					/>
@@ -41,10 +72,12 @@ const Search = () => {
 						value={category}
 						onChange={(e) => setCategory(e.target.value)}
 					>
-						<option value="">All</option>
-						<option value="">sample1</option>
-						<option value="">sample2</option>
-						<option value="">sample3</option>
+						<option value="">ALL</option>
+						{categoriesResponse?.categories.map((category) => (
+							<option key={category} value={category}>
+								{category.toLocaleUpperCase()}
+							</option>
+						))}
 					</select>
 				</div>
 			</aside>
@@ -57,33 +90,42 @@ const Search = () => {
 					onChange={(e) => setSearch(e.target.value)}
 				/>
 
-				<div className="search-product-list">
-					<ProductCard
-						productId="bfjdwf"
-						name="MACKBOOK"
-						price={10000}
-						stock={10}
-						handler={addToCarthandler}
-						photo="https://m.media-amazon.com/images/I/71eXNIDUGjL._SX679_.jpg"
-					/>
-				</div>
-				<article>
-					<button
-						disabled={!isPrevPage}
-						onClick={() => setPage((prevPage) => prevPage - 1)}
-					>
-						Prev
-					</button>
-					<span>
-						{page} of {5}
-					</span>
-					<button
-						disabled={!isNextPage}
-						onClick={() => setPage((nextPage) => nextPage + 1)}
-					>
-						Next
-					</button>
-				</article>
+				{productLoading ? (
+					<Skeleton count={10} />
+				) : (
+					<div className="search-product-list">
+						{searchedData?.products.map((product) => (
+							<ProductCard
+								key={product._id}
+								productId={product._id}
+								name={product.name}
+								price={product.price}
+								stock={product.stock}
+								handler={addToCarthandler}
+								photo={product.photo}
+							/>
+						))}
+					</div>
+				)}
+				{searchedData && searchedData.totalPage > 1 && (
+					<article>
+						<button
+							disabled={!isPrevPage}
+							onClick={() => setPage((prevPage) => prevPage - 1)}
+						>
+							Prev
+						</button>
+						<span>
+							{page} of {searchedData.totalPage}
+						</span>
+						<button
+							disabled={!isNextPage}
+							onClick={() => setPage((nextPage) => nextPage + 1)}
+						>
+							Next
+						</button>
+					</article>
+				)}
 			</main>
 		</div>
 	);
