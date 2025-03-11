@@ -2,13 +2,18 @@ import { ChangeEvent, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../../../types/reducer-types";
-import { useNewProductMutation } from "../../../redux/api/productApi";
+import {
+	useAllProductsQuery,
+	useNewProductMutation,
+} from "../../../redux/api/productApi";
+import { useNavigate } from "react-router-dom";
+import { responseToast } from "../../../utils/features";
 
 const NewProduct = () => {
-	const { user, loading } = useSelector(
+	const { user } = useSelector(
 		(state: { user: UserReducerInitialState }) => state.user
 	);
-
+	const { refetch } = useAllProductsQuery(user?._id ?? "");
 	const [name, setName] = useState<string>("");
 	const [category, setCategory] = useState<string>("");
 	const [price, setPrice] = useState<number>(1000);
@@ -17,6 +22,7 @@ const NewProduct = () => {
 	const [photo, setPhoto] = useState<File>();
 
 	const [newProduct] = useNewProductMutation();
+	const navigate = useNavigate();
 
 	const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		const file: File | undefined = e.target.files?.[0];
@@ -37,31 +43,28 @@ const NewProduct = () => {
 	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!photo || !name || !category || !price || !stock) {
+		if (!photo || !name || !category || !price || stock < 1) {
 			return;
 		}
 
 		const formData = new FormData();
-		formData.append("name", name);
-		formData.append("price", String(price));
-		formData.append("stock", String(stock));
-		formData.append("category", category);
-		formData.append("photo", photo);
 
-		const response = await newProduct({
-			formData,
-			id: user?._id ?? "",
-		}).unwrap();
+		formData.set("name", name);
+		formData.set("price", price.toString());
+		formData.set("stock", stock.toString());
+		formData.set("category", category);
+		formData.set("photo", photo);
+		try {
+			const response = await newProduct({
+				formData,
+				id: user?._id ?? "",
+			});
 
-		if (response.success) {
-			alert("Product created successfully");
-			setName("");
-			setPrice(1000);
-			setStock(1);
-			setCategory("");
-			setPhotoPrev("");
-		} else {
-			alert("Failed to create product");
+			console.log("API Response:", response);
+			refetch(); // Refetch the product list
+			responseToast(response, navigate, "/admin/product");
+		} catch (error) {
+			console.error("Error creating product:", error);
 		}
 	};
 	return (

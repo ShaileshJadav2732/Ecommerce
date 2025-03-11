@@ -1,5 +1,3 @@
-import { NewProductRequestBody } from "./../../../Ecommerce_Backend/src/types/types";
-import { AllProductResponse } from "./api-types";
 import { Product, User } from "./types";
 
 export type CustomeError = {
@@ -39,7 +37,21 @@ export type SearchProductRequest = {
 	search: string;
 	sort: string;
 };
+export type ProductResponse = {
+	success: boolean;
+	product: Product;
+};
 export type NewProductRequest = {
 	id: string;
 	formData: FormData;
+};
+export type updateProductRequest = {
+	userId: string; //admin id
+	productId: string;
+	formData: FormData;
+};
+
+export type deleteProductRequest = {
+	userId: string; //admin id
+	productId: string;
 };

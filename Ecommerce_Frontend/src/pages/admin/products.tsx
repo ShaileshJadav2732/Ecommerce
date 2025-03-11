@@ -66,7 +66,7 @@ const Products = () => {
 					name: i.name,
 					price: i.price,
 					stock: i.stock,
-					action: <Link to={`/admin/product/i._id`}>Manage</Link>,
+					action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
 				}))
 			);
 	}, [data]);
@@ -76,7 +76,7 @@ const Products = () => {
 		rows,
 		"dashboard-product-box",
 		"Products",
-		rows.length > 6
+		rows.length > 10
 	)();
 
 	return (
