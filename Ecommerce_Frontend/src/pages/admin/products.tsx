@@ -48,9 +48,9 @@ const Products = () => {
 		(state: { user: UserReducerInitialState }) => state.user
 	);
 	const { data, isError, error, isLoading } = useAllProductsQuery(
-		user?._id ?? ""
+		user._id ?? ""
 	); //nullish coalescing operator. It provides a fallback value ("") if user?._id is null or undefined.
-
+	console.log("users data::", data);
 	const [rows, setRows] = useState<DataType[]>([]);
 
 	if (isError) {
@@ -66,7 +66,9 @@ const Products = () => {
 					name: i.name,
 					price: i.price,
 					stock: i.stock,
-					action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
+					action: (
+						<Link to={`/admin/product/${i._id} key={i._id}`}>Manage</Link>
+					),
 				}))
 			);
 	}, [data]);

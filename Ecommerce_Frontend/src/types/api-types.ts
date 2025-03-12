@@ -17,7 +17,7 @@ export type UserResponse = {
 	success: boolean;
 	message: string;
 };
-export type AllProductResponse = {
+export type AllProductsResponse = {
 	products: Product[];
 	success: boolean;
 };
@@ -26,11 +26,11 @@ export type CategoriesResponse = {
 	success: boolean;
 };
 
-export type SearchProductResponse = AllProductResponse & {
+export type SearchProductsResponse = AllProductsResponse & {
 	totalPage: number;
 };
 
-export type SearchProductRequest = {
+export type SearchProductsRequest = {
 	price: number;
 	page: number;
 	category: string;
@@ -45,13 +45,13 @@ export type NewProductRequest = {
 	id: string;
 	formData: FormData;
 };
-export type updateProductRequest = {
+export type UpdateProductRequest = {
 	userId: string; //admin id
 	productId: string;
 	formData: FormData;
 };
 
-export type deleteProductRequest = {
+export type DeleteProductRequest = {
 	userId: string; //admin id
 	productId: string;
 };

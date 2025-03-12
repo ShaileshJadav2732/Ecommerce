@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
-	AllProductResponse,
-	deleteProductRequest,
+	AllProductsResponse,
+	DeleteProductRequest,
 	MessageResponse,
 	NewProductRequest,
 	ProductResponse,
-	SearchProductRequest,
-	SearchProductResponse,
-	updateProductRequest,
+	SearchProductsRequest,
+	SearchProductsResponse,
+	UpdateProductRequest,
 } from "../../types/api-types";
 import { CategoriesResponse } from "./../../types/api-types";
 
@@ -18,12 +18,12 @@ export const productAPI = createApi({
 	}),
 	tagTypes: ["product"],
 	endpoints: (builder) => ({
-		latestProducts: builder.query<AllProductResponse, string>({
+		latestProducts: builder.query<AllProductsResponse, string>({
 			//here string is the type of the query argument
 			query: () => "latest",
 			providesTags: ["product"],
 		}),
-		allProducts: builder.query<AllProductResponse, string>({
+		allProducts: builder.query<AllProductsResponse, string>({
 			query: (id) => `admin-products?id=${id}`,
 			providesTags: ["product"],
 		}),
@@ -31,7 +31,10 @@ export const productAPI = createApi({
 			query: () => "categories",
 			providesTags: ["product"],
 		}),
-		searchProducts: builder.query<SearchProductResponse, SearchProductRequest>({
+		searchProducts: builder.query<
+			SearchProductsResponse,
+			SearchProductsRequest
+		>({
 			query: ({ price, category, search, sort, page }) => {
 				let base = `all?search=${search}&page=${page}`;
 				if (price) base += `&price=${price}`;
@@ -55,7 +58,7 @@ export const productAPI = createApi({
 			}),
 			invalidatesTags: ["product"],
 		}),
-		updateProduct: builder.mutation<MessageResponse, updateProductRequest>({
+		updateProduct: builder.mutation<MessageResponse, UpdateProductRequest>({
 			query: ({ formData, userId, productId }) => ({
 				url: `${productId}?id=${userId}`,
 				method: "PUT",
@@ -63,7 +66,7 @@ export const productAPI = createApi({
 			}),
 			invalidatesTags: ["product"],
 		}),
-		deleteProduct: builder.mutation<MessageResponse, deleteProductRequest>({
+		deleteProduct: builder.mutation<MessageResponse, DeleteProductRequest>({
 			query: ({ userId, productId }) => ({
 				url: `${productId}?id=${userId}`,
 				method: "DELETE",
