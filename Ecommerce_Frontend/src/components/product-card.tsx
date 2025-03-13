@@ -8,7 +8,7 @@ type productsProps = {
 	name: string;
 	price: number;
 	stock: number;
-	handler: (cartItem: CartItem) => string | undefined;
+	handler: (cartItem: CartItem) => string | undefined | void;
 };
 
 const ProductCard = ({
@@ -17,7 +17,6 @@ const ProductCard = ({
 	price,
 	productId,
 	stock,
-
 	handler,
 }: productsProps) => {
 	return (

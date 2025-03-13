@@ -4,8 +4,15 @@ import CartItemCard from "../components/cart-item";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CartReducerInitialState } from "../types/reducer-types";
-import { addToCart, removeCartItem } from "../redux/reducer/cartReducer";
+import {
+	addToCart,
+	discountApplied,
+	removeCartItem,
+} from "../redux/reducer/cartReducer";
 import { CartItem } from "../types/types";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { server } from "../redux/store";
 
 const Cart = () => {
 	const { cartItems, subtotal, tax, total, shippingCharges, discount } =
@@ -18,33 +25,44 @@ const Cart = () => {
 
 	const dispatch = useDispatch();
 
-	const incrementHandler = (cartItem: CartItem) => {
-		if (cartItem.quantity >= cartItem.stock) return;
-		dispatch(addToCart({ ...cartItem, quantity: cartItem.quantity + 1 }));
+	const incrementHandler = (cartItems: CartItem) => {
+		if (cartItems.quantity >= cartItems.stock)
+			return toast.error("Cannot add more stock");
+		dispatch(addToCart({ ...cartItems, quantity: cartItems.quantity + 1 }));
 	};
-	const decrementHandler = (cartItem: CartItem) => {
-		if (cartItem.quantity <= 1) return;
-		dispatch(addToCart({ ...cartItem, quantity: cartItem.quantity - 1 }));
+	const decrementHandler = (cartItems: CartItem) => {
+		if (cartItems.quantity <= 1) return;
+		dispatch(addToCart({ ...cartItems, quantity: cartItems.quantity - 1 }));
 	};
 	const removeHandler = (productId: string) => {
 		dispatch(removeCartItem(productId));
 	};
 
 	useEffect(() => {
+		const { token: cancelToken, cancel } = axios.CancelToken.source();
+
 		const timeOutId = setTimeout(() => {
-			// Simulate checking the coupon code against a list of valid codes
-			const validCodes = ["SAVE10", "20OFF", "FREESHIP"];
-			if (validCodes.includes(cuponCode.toUpperCase())) {
-				setIsCuponValid(true);
-			} else {
-				setIsCuponValid(false);
-			}
+			axios
+				.get(`${server}/api/v1/payment/discount?coupon=${cuponCode}`, {
+					cancelToken,
+				})
+				.then((res) => {
+					dispatch(discountApplied(res.data.message));
+
+					setIsCuponValid(true);
+				})
+				.catch(() => {
+					dispatch(discountApplied(0));
+					setIsCuponValid(false);
+				});
 		}, 1000);
 
 		return () => {
 			clearTimeout(timeOutId);
+			cancel();
+			setIsCuponValid(false);
 		};
-	}, [cuponCode]);
+	}, [cuponCode, dispatch]);
 
 	return (
 		<div className="cart">
@@ -60,7 +78,7 @@ const Cart = () => {
 						/>
 					))
 				) : (
-					<p>No items Added</p>
+					<h1>No items Added</h1>
 				)}
 			</main>
 			<aside>
@@ -71,7 +89,7 @@ const Cart = () => {
 					Discount: -<em className="red">₹{discount}</em>
 				</p>
 				<p>
-					<b>Total : ₹{total - discount}</b>
+					<b>Total : ₹{total}</b>
 				</p>
 				<input
 					type="text"

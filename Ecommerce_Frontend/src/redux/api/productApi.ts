@@ -45,7 +45,7 @@ export const productAPI = createApi({
 			},
 			providesTags: ["product"],
 		}),
-		poductDetails: builder.query<ProductResponse, string>({
+		productDetails: builder.query<ProductResponse, string>({
 			//here string is the type of the query argument
 			query: (id) => id,
 			providesTags: ["product"],
@@ -82,7 +82,7 @@ export const {
 	useCategoriesQuery,
 	useSearchProductsQuery,
 	useNewProductMutation,
-	usePoductDetailsQuery,
+	useProductDetailsQuery,
 	useUpdateProductMutation,
 	useDeleteProductMutation,
 } = productAPI;

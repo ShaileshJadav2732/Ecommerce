@@ -9,6 +9,7 @@ const initialState: CartReducerInitialState = {
 	tax: 0,
 	shippingCharges: 0,
 	discount: 0,
+
 	total: 0,
 	shippingInfo: {
 		address: "",
@@ -18,6 +19,22 @@ const initialState: CartReducerInitialState = {
 		pinCode: "",
 	},
 };
+
+// Helper function to calculate prices
+const calculatePrices = (state: CartReducerInitialState) => {
+	state.subtotal = state.cartItems.reduce(
+		(acc, item) => acc + item.price * item.quantity,
+		0
+	);
+
+	// Example calculations (adjust as needed)
+	state.tax = state.subtotal * 0.1; // 10% tax
+	state.shippingCharges = state.subtotal > 1000 ? 0 : 50; // Free shipping above ₹1000
+	state.discount = 0; // Reset discount (can be updated based on coupon logic)
+	state.total =
+		state.subtotal + state.tax + state.shippingCharges - state.discount;
+};
+
 export const cartReducer = createSlice({
 	name: "cartReducer",
 	initialState,
@@ -28,22 +45,44 @@ export const cartReducer = createSlice({
 			const index = state.cartItems.findIndex(
 				(i) => i.productId === action.payload.productId
 			);
+
 			if (index !== -1) {
-				state.cartItems[index].quantity += action.payload.quantity;
+				state.cartItems[index] = action.payload; // Update existing item
 			} else {
-				state.cartItems.push(action.payload);
-				state.loading = false;
+				state.cartItems.push(action.payload); // Add new item
 			}
+
+			calculatePrices(state); // Recalculate prices
+			state.loading = false;
 		},
 		removeCartItem: (state, action: PayloadAction<string>) => {
 			state.loading = true;
 			state.cartItems = state.cartItems.filter(
 				(i) => i.productId !== action.payload
 			);
+
+			calculatePrices(state); // Recalculate prices
 			state.loading = false;
+		},
+		// Optional: Add a reducer to update shipping info
+		updateShippingInfo: (
+			state,
+			action: PayloadAction<CartReducerInitialState["shippingInfo"]>
+		) => {
+			state.shippingInfo = action.payload;
+		},
+		discountApplied: (state, action: PayloadAction<number>) => {
+			state.discount = action.payload;
+			state.total =
+				state.subtotal + state.tax + state.shippingCharges - state.discount;
 		},
 	},
 });
 
-export const { addToCart, removeCartItem } = cartReducer.actions;
+export const {
+	addToCart,
+	removeCartItem,
+	updateShippingInfo,
+	discountApplied,
+} = cartReducer.actions;
 export default cartReducer;

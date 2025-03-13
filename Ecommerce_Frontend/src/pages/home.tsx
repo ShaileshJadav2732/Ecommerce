@@ -16,6 +16,7 @@ const Home = () => {
 			return toast.error("Out of stock");
 		}
 		dispatch(addToCart(cartItem));
+		toast.success("Added to cart", { icon: "🛒", style: { color: "black" } });
 	};
 
 	if (isError) toast.error("can not fetch the Products");

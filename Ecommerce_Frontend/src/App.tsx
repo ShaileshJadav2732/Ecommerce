@@ -117,7 +117,7 @@ const App = () => {
 					</Route>
 				</Routes>
 			</Suspense>
-			<Toaster position="bottom-center" />
+			<Toaster position="top-right" reverseOrder />
 		</Router>
 	);
 };

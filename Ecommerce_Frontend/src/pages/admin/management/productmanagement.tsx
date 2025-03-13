@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
 	useAllProductsQuery,
 	useDeleteProductMutation,
-	usePoductDetailsQuery,
+	useProductDetailsQuery,
 	useUpdateProductMutation,
 } from "../../../redux/api/productApi";
 import { server } from "../../../redux/store";
@@ -20,9 +20,10 @@ const Productmanagement = () => {
 	);
 
 	const params = useParams();
+	// console.log("paramsId", params.id);
 	const navigate = useNavigate();
 	const { refetch } = useAllProductsQuery(user?._id ?? "");
-	const { data, isLoading } = usePoductDetailsQuery(params.id!);
+	const { data, isLoading } = useProductDetailsQuery(params.id!);
 
 	const { name, photo, price, stock, category } = data?.product || {
 		_id: "",
