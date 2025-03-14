@@ -9,7 +9,6 @@ const initialState: CartReducerInitialState = {
 	tax: 0,
 	shippingCharges: 0,
 	discount: 0,
-
 	total: 0,
 	shippingInfo: {
 		address: "",

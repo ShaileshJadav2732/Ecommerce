@@ -1,4 +1,5 @@
-import { Product, User } from "./types";
+import { ShippingInfo } from "./../../../Ecommerce_Backend/src/types/types";
+import { CartItem, Order, Product, User } from "./types";
 
 export type CustomeError = {
 	statusCode: number;
@@ -54,4 +55,28 @@ export type UpdateProductRequest = {
 export type DeleteProductRequest = {
 	userId: string; //admin id
 	productId: string;
+};
+
+export type NewOrderRequest = {
+	cartItems: CartItem[];
+	subtotal: number;
+	tax: number;
+	shippingCharges: number;
+	discount: number;
+	total: number;
+	user: string;
+};
+
+export type AllordersResponse = {
+	success: boolean;
+	orders: Order[];
+};
+export type OrderDetalisResponse = {
+	success: boolean;
+	order: Order;
+};
+
+export type UpdateOrderRequest = {
+	userId: string;
+	orderId: string;
 };

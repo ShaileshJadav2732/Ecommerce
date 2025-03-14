@@ -7,7 +7,9 @@ import toast from "react-hot-toast";
 import { auth } from "../firebase";
 import { MessageResponse } from "../types/api-types";
 
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+	const navigate = useNavigate();
 	const [gender, setGender] = useState("male");
 	const [date, setDate] = useState("");
 
@@ -45,6 +47,7 @@ const Login = () => {
 			if ("data" in res) {
 				const responseData = res.data as MessageResponse;
 				toast.success(responseData.message);
+				navigate("/");
 			} else if ("error" in res) {
 				const error = res as FetchBaseQueryError;
 				const message = (error.data as MessageResponse).message;
