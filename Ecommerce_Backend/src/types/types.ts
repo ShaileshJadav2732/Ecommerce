@@ -49,7 +49,7 @@ export type invalidateCacheType = {
 	productId?: string | string[];
 };
 
-export type OrderItem = {
+export type orderItem = {
 	name: string;
 	price: number;
 	quantity: number;
@@ -68,7 +68,7 @@ export type ShippingInfo = {
 export interface NewOrderRequestBody {
 	shippingInfo: ShippingInfo;
 	user: string;
-	orderItems: OrderItem[];
+	orderItems: orderItem[];
 	subTotal: number;
 	tax: number;
 	shippingCharges: number;

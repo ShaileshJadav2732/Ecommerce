@@ -1,14 +1,15 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/admin/protected-route";
 import Loader from "./components/loader";
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { getUser } from "./redux/api/userApi";
-import { useDispatch, useSelector } from "react-redux";
 import { userExist, userNotExist } from "./redux/reducer/userReducer";
 import { UserReducerInitialState } from "./types/reducer-types";
-import ProtectedRoute from "./components/admin/protected-route";
+import Checkout from "./pages/checkOut";
 
 const Home = lazy(() => import("./pages/home"));
 const Search = lazy(() => import("./pages/search"));
@@ -30,12 +31,12 @@ const ProductManagement = lazy(
 	() => import("./pages/admin/management/productmanagement")
 );
 const TransactionManagement = lazy(
-	() => import("./pages/admin/management/transactionmanagement")
+	() => import("./pages/admin/transactionmanagement")
 );
 const Header = lazy(() => import("./components/header"));
 const Orders = lazy(() => import("./pages/orders"));
 const OrderDetails = lazy(() => import("./pages/order-details"));
-
+const NotFound = lazy(() => import("./pages/not-found"));
 const App = () => {
 	const { user, loading } = useSelector(
 		(state: { user: UserReducerInitialState }) => state.user
@@ -115,6 +116,8 @@ const App = () => {
 							element={<TransactionManagement />}
 						/>
 					</Route>
+					<Route path="/pay" element={<Checkout />}></Route>
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Suspense>
 			<Toaster position="top-center" reverseOrder />

@@ -1,17 +1,17 @@
 import { FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { Skeleton } from "../../../components/loader";
+import AdminSidebar from "../../components/admin/AdminSidebar";
+import { Skeleton } from "../../components/loader";
 import {
 	useDeleteOrderMutation,
 	useOrderdDetailsQuery,
 	useUpdateOrderMutation,
-} from "../../../redux/api/orderApi";
-import { server } from "../../../redux/store";
-import { UserReducerInitialState } from "../../../types/reducer-types";
-import { OrderItem } from "../../../types/types";
-import { responseToast } from "../../../utils/features";
+} from "../../redux/api/orderApi";
+import { server } from "../../redux/store";
+import { UserReducerInitialState } from "../../types/reducer-types";
+import { OrderItem } from "../../types/types";
+import { responseToast } from "../../utils/features";
 
 const defaultData = {
 	shippingInfo: {

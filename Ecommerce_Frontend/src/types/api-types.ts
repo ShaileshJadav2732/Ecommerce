@@ -1,4 +1,4 @@
-import { ShippingInfo } from "./../../../Ecommerce_Backend/src/types/types";
+import { ShippingInfo } from "./types";
 import { CartItem, Order, Product, User } from "./types";
 
 export type CustomeError = {
@@ -12,6 +12,10 @@ export type CustomeError = {
 export type MessageResponse = {
 	success: boolean;
 	message: string;
+};
+export type AllUsersResponse = {
+	success: boolean;
+	users: User[];
 };
 export type UserResponse = {
 	user: User;
@@ -58,6 +62,7 @@ export type DeleteProductRequest = {
 };
 
 export type NewOrderRequest = {
+	shippingInfo: ShippingInfo;
 	cartItems: CartItem[];
 	subtotal: number;
 	tax: number;
@@ -76,6 +81,10 @@ export type OrderDetalisResponse = {
 	order: Order;
 };
 
+export type DeleteUserRequest = {
+	userId: string;
+	adminUserId: string;
+};
 export type UpdateOrderRequest = {
 	userId: string;
 	orderId: string;

@@ -56,11 +56,9 @@ export const getAllCategories = TryCatch(
 // Controller to get all products for admin
 export const getAdminProducts = TryCatch(async (req, res, next) => {
 	let products;
-	if (myCache.has("admin-products"))
-		products = JSON.parse(myCache.get("admin-products") as string);
-	else {
+
+	{
 		products = await Product.find({}); // Fetch all products
-		myCache.set("admin-products", JSON.stringify(products));
 	}
 	return res.status(200).json({
 		success: true,
@@ -191,11 +189,11 @@ export const getAllProducts = TryCatch(
 		const baseQuery: BaseQuery = {
 			// Initialize base query
 			// name: {
-			//   $regex: search || "",
-			//   $options: "i",
+			// 	$regex: search || "",
+			// 	$options: "i",
 			// },
 			// price: {
-			//   $lte: Number(price),
+			// 	$lte: Number(price),
 			// },
 			// category,
 		};

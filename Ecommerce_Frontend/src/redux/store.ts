@@ -9,6 +9,7 @@ export const server = import.meta.env.VITE_SERVER;
 
 export const store = configureStore({
 	reducer: {
+		user: userReducer.reducer,
 		// API reducers to handle async actions
 		[userAPI.reducerPath]: userAPI.reducer,
 		[productAPI.reducerPath]: productAPI.reducer,
@@ -16,7 +17,6 @@ export const store = configureStore({
 		[cartReducer.name]: cartReducer.reducer,
 
 		// Sync user state reducer
-		user: userReducer.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware().concat(

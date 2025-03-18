@@ -70,8 +70,8 @@ const Search = () => {
 					<h4>Max Price: {maxPrice || ""}</h4>
 					<input
 						type="range"
-						min="100"
-						max="1000000"
+						min="10   "
+						max="100000"
 						value={maxPrice}
 						onChange={(e) => setMaxPrice(e.target.value)}
 					/>

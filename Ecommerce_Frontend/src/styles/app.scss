@@ -98,7 +98,47 @@ dialog {
 		@include flex(column, flex-start, center, 0.25rem);
 	}
 }
-
+.checkout-container {
+	@include grid(1fr 1fr, 2rem);
+	> div {
+		padding: 1rem;
+		background-color: white;
+		> h2 {
+			@include heading;
+			margin: 1rem 0;
+		}
+		> form {
+			> div {
+				@include flex(row, flex-start, stretch, 0.5rem);
+				> label {
+					font-size: 1.1rem;
+					width: 100%;
+					margin: 0.5rem 0;
+				}
+				> input {
+					width: 100%;
+					padding: 0.5rem;
+					border: 1px solid #ccc;
+					border-radius: 5px;
+					outline: none;
+				}
+			}
+			> button {
+				padding: 0.5rem 1rem;
+				border: none;
+				outline: none;
+				border-radius: 10px;
+				cursor: pointer;
+				background-color: rgba(0, 115, 255);
+				color: white;
+				&:disabled {
+					background-color: rgba(0, 115, 255, 0.1);
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+}
 .admin-container {
 	@include grid(1fr 4fr, 2rem);
 	height: 100vh;

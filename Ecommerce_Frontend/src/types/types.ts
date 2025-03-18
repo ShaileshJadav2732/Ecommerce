@@ -32,10 +32,10 @@ export type CartItem = {
 	stock: number;
 };
 
-export type orderItem = Omit<CartItem, "stock"> & { _id: string };
+export type OrderItem = Omit<CartItem, "stock"> & { _id: string };
 
 export type Order = {
-	orderItems: orderItem[];
+	orderItems: OrderItem[];
 	shippingInfo: ShippingInfo;
 	subtotal: number;
 	tax: number;
