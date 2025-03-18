@@ -1,16 +1,16 @@
 import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import { Skeleton } from "../../components/loader";
 import { useAllProductsQuery } from "../../redux/api/productApi";
 import { server } from "../../redux/store";
-import toast from "react-hot-toast";
 import { CustomeError } from "../../types/api-types";
-import { useSelector } from "react-redux";
 import { UserReducerInitialState } from "../../types/reducer-types";
-import { Skeleton } from "../../components/loader";
 
 interface DataType {
 	photo: ReactElement;
@@ -48,9 +48,9 @@ const Products = () => {
 		(state: { user: UserReducerInitialState }) => state.user
 	);
 	const { data, isError, error, isLoading } = useAllProductsQuery(
-		user?._id ?? ""
+		user ? user._id : ""
 	); //nullish coalescing operator. It provides a fallback value ("") if user?._id is null or undefined.
-
+	console.log("users data::", data);
 	const [rows, setRows] = useState<DataType[]>([]);
 
 	if (isError) {
@@ -76,7 +76,7 @@ const Products = () => {
 		rows,
 		"dashboard-product-box",
 		"Products",
-		rows.length > 10
+		rows.length > 6
 	)();
 
 	return (

@@ -7,8 +7,12 @@ import {
 import toast from "react-hot-toast";
 import { CustomeError } from "../types/api-types";
 import { Skeleton } from "../components/loader";
+import { CartItem } from "../types/types";
+import { addToCart } from "../redux/reducer/cartReducer";
+import { useDispatch } from "react-redux";
 
 const Search = () => {
+	const dispatch = useDispatch();
 	const { data: categoriesResponse, isError, error } = useCategoriesQuery("");
 
 	const [search, setSearch] = useState("");
@@ -30,8 +34,14 @@ const Search = () => {
 		page,
 	});
 	console.log(searchedData);
-	const addToCarthandler = () => {};
 
+	const addToCartHandler = (cartItem: CartItem) => {
+		if (cartItem.stock < 1) {
+			return toast.error("Out of stock");
+		}
+		dispatch(addToCart(cartItem));
+		toast.success("Added to cart", { icon: "🛒", style: { color: "black" } });
+	};
 	const isPrevPage = true;
 	const isNextPage = true;
 
@@ -60,8 +70,8 @@ const Search = () => {
 					<h4>Max Price: {maxPrice || ""}</h4>
 					<input
 						type="range"
-						min="100"
-						max="1000000"
+						min="10   "
+						max="100000"
 						value={maxPrice}
 						onChange={(e) => setMaxPrice(e.target.value)}
 					/>
@@ -101,7 +111,7 @@ const Search = () => {
 								name={product.name}
 								price={product.price}
 								stock={product.stock}
-								handler={addToCarthandler}
+								handler={addToCartHandler}
 								photo={product.photo}
 							/>
 						))}
