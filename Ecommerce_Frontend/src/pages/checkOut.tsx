@@ -1,28 +1,31 @@
 import {
 	Elements,
 	PaymentElement,
-	useStripe,
 	useElements,
+	useStripe,
 } from "@stripe/react-stripe-js";
-import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { NewOrderRequest } from "../types/api-types";
-import { RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useNewOrderMutation } from "../redux/api/orderApi";
 import { resetCart } from "../redux/reducer/cartReducer";
+import { RootState } from "../redux/store";
+import { NewOrderRequest } from "../types/api-types";
 import { responseToast } from "../utils/features";
 
-// Load your Stripe publishable key
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY as string);
+const stripeKey =
+	"pk_test_51OHpE1SEOz14slwcBOcGOweicHk9XITWgND9NAvr7ZJXIYdUiNyOHQtrbCsdQTLQqVAgDNeaDpPshuIO1PnHthtq00AJdf3gtG";
+
+const stripePromise = loadStripe(stripeKey);
 
 const CheckOutForm = () => {
 	const stripe = useStripe();
 	const elements = useElements();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
 	const { user } = useSelector((state: RootState) => state.user);
 
 	const {
@@ -35,59 +38,50 @@ const CheckOutForm = () => {
 		total,
 	} = useSelector((state: RootState) => state.cartReducer);
 
-	const [isProcessing, setIsProcessing] = useState(false);
+	const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
 	const [newOrder] = useNewOrderMutation();
 
-	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+	const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!stripe || !elements) {
-			return;
-		}
-
+		if (!stripe || !elements) return;
 		setIsProcessing(true);
 
 		const orderData: NewOrderRequest = {
 			shippingInfo,
-			cartItems,
+			orderItems: cartItems,
 			subtotal,
 			tax,
 			discount,
 			shippingCharges,
 			total,
-			user: user?._id || "",
+			user: user?._id ?? "",
 		};
-		try {
-			const { paymentIntent, error } = await stripe.confirmPayment({
-				elements,
-				confirmParams: { return_url: window.location.origin },
-				redirect: "if_required",
-			});
 
-			if (error) {
-				setIsProcessing(false);
-				toast.error(error.message || "Something went wrong");
-				return;
-			}
+		const { paymentIntent, error } = await stripe.confirmPayment({
+			elements,
+			confirmParams: { return_url: window.location.origin },
+			redirect: "if_required",
+		});
 
-			if (paymentIntent.status === "succeeded") {
-				const res = await newOrder(orderData);
-				dispatch(resetCart());
-				responseToast(res, navigate, "/order");
-			}
-		} catch (error) {
-			console.error(error);
-			toast.error("An unexpected error occurred");
-		} finally {
+		if (error) {
 			setIsProcessing(false);
+			return toast.error(error.message || "Something Went Wrong");
 		}
-	};
 
+		if (paymentIntent.status === "succeeded") {
+			const res = await newOrder(orderData);
+			dispatch(resetCart());
+			responseToast(res, navigate, "/orders");
+		}
+		setIsProcessing(false);
+	};
 	return (
 		<div className="checkout-container">
 			<form onSubmit={submitHandler}>
 				<PaymentElement />
-				<button type="submit" disabled={isProcessing || !stripe || !elements}>
+				<button type="submit" disabled={isProcessing}>
 					{isProcessing ? "Processing..." : "Pay"}
 				</button>
 			</form>
@@ -97,25 +91,20 @@ const CheckOutForm = () => {
 
 const Checkout = () => {
 	const location = useLocation();
+
 	const clientSecret: string | undefined = location.state;
 
-	// Redirect to shipping if no clientSecret is provided
-	if (!clientSecret) {
-		return <Navigate to="/shipping" />;
-	}
+	if (!clientSecret) return <Navigate to={"/shipping"} />;
 
 	return (
-		<div>
-			<Elements
-				key={clientSecret} // Ensure Elements re-renders when clientSecret changes
-				options={{
-					clientSecret,
-				}}
-				stripe={stripePromise}
-			>
-				<CheckOutForm />
-			</Elements>
-		</div>
+		<Elements
+			options={{
+				clientSecret,
+			}}
+			stripe={stripePromise}
+		>
+			<CheckOutForm />
+		</Elements>
 	);
 };
 
