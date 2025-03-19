@@ -1,4 +1,4 @@
-import { ShippingInfo } from "./types";
+import { Pie, ShippingInfo, State } from "./types";
 import { CartItem, Order, Product, User } from "./types";
 
 export type CustomeError = {
@@ -63,7 +63,7 @@ export type DeleteProductRequest = {
 
 export type NewOrderRequest = {
 	shippingInfo: ShippingInfo;
-	cartItems: CartItem[];
+	orderItems: CartItem[];
 	subtotal: number;
 	tax: number;
 	shippingCharges: number;
@@ -79,6 +79,14 @@ export type AllordersResponse = {
 export type OrderDetalisResponse = {
 	success: boolean;
 	order: Order;
+};
+export type StateResponse = {
+	success: boolean;
+	stats: State;
+};
+export type PieResponse = {
+	success: boolean;
+	charts: Pie;
 };
 
 export type DeleteUserRequest = {
